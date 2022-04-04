@@ -5,7 +5,7 @@ import java.util.Scanner;
 public class WiproPdv {
 
 	private final int VL_IMPOSTO = 9;
-	
+
 	private String[] itemNomeProduto = { "Leite", "Cereal", "Arroz", "Atum", "Feijão", "Azeite", "Oleo", "Sabao", "Sal", "Açucar" };
 	private int[] itemCodProduto = { 1, 2, 3, 4, 5, 6, 7, 8, 9, 10 };
 	private int[] itemQuantProd = { 10, 10, 10, 10, 10, 10, 10, 10, 10, 10 };
@@ -81,7 +81,7 @@ public class WiproPdv {
 		}
 	}
 
-	public void realizarCompra(Scanner sc, String[] itemNomeProduto) {
+	private void realizarCompra(Scanner sc, String[] itemNomeProduto) {
 		int index;
 		int quantidadeDeProduto;
 		String continuar = "";
@@ -113,7 +113,7 @@ public class WiproPdv {
 		} while (!continuar.equalsIgnoreCase("N"));
 	}
 
-	public void imprimeItem(int[] codigo, String[] nome, int[] quantidade, float[] valor) {
+	private void imprimeItem(int[] codigo, String[] nome, int[] quantidade, float[] valor) {
 		System.out.println("==================================================");
 		System.out.printf("\t\t WIPRO STORE\n");
 		System.out.println("==================================================");
