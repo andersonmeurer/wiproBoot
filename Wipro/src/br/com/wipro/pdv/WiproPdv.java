@@ -2,12 +2,10 @@ package br.com.wipro.pdv;
 
 import java.util.Scanner;
 
-/*
- * falta verificar:
- * 		Caso produto esteja indisponível deve retornar a mensagem para o cliente “Produto Indisponível”;
- */
 public class WiproPdv {
 
+	private final int VL_IMPOSTO = 9;
+	
 	private String[] itemNomeProduto = { "Leite", "Cereal", "Arroz", "Atum", "Feijão", "Azeite", "Oleo", "Sabao", "Sal", "Açucar" };
 	private int[] itemCodProduto = { 1, 2, 3, 4, 5, 6, 7, 8, 9, 10 };
 	private int[] itemQuantProd = { 10, 10, 10, 10, 10, 10, 10, 10, 10, 10 };
@@ -25,35 +23,50 @@ public class WiproPdv {
 		realizarCompra(sc, itemNomeProduto);
 		mostarItensNoCarrinho(carrinhoNomeProduto, carrinhoQuantProd, carrinhoPrecoProd);
 		int nrFormaPagamento = formaDePagamento(sc, carrinhoQuantProd, carrinhoPrecoProd);
-		notaFiscal(sc, nrFormaPagamento);
+		notaFiscal(sc, nrFormaPagamento, carrinhoNomeProduto, carrinhoQuantProd, carrinhoPrecoProd);
 	}
 
-	private void notaFiscal(Scanner sc, int nrFormaPagamento) {
-		System.out.println("WIPRO STORE");
+	private void notaFiscal(Scanner sc, int nrFormaPagamento, String[] listNome, int[] listQuantidade, float[] listPreco) {
+		System.out.println("\n\nWIPRO STORE");
 		System.out.println("Rua dos Bôbos, nº0 - Mercadinho - LTDA\n");
-		System.out.println("\t\tNOTA FISCAL\n==================================================\n");
-		System.out.println("==================================================");
-		if (nrFormaPagamento == 1) {		System.out.println(1);
-		} else if (nrFormaPagamento == 2) {	System.out.println(2);
-		} else if (nrFormaPagamento == 3) {	System.out.println(3);
-		} else if (nrFormaPagamento == 4) {	System.out.println(4);}
+		System.out.println("\t\tNOTA FISCAL\n");
+		System.out.println("=================================================================\n");
+		System.out.println("Nome\t\tQuantidade\tPreco unit (R$)\tPreco total (R$)");
+		float valorTotalCompra = 0;
+		for (int i = 0; i < (indexCarrinho + 1); i++) {
+			valorTotalCompra += (listPreco[i] * listQuantidade[i]);
+			System.out.printf("%s \t\t%d \t\t%.2f \t\t%.2f \n", listNome[i], listQuantidade[i], listPreco[i], (listPreco[i] * listQuantidade[i]));
+		}
+		System.out.println("=================================================================\n");
+		if (nrFormaPagamento == 1) {
+			print(((valorTotalCompra * 20) / 100), valorTotalCompra);
+		} else if (nrFormaPagamento == 2) {
+			print(((valorTotalCompra * 10) / 100), valorTotalCompra);
+		} else if (nrFormaPagamento == 3 || nrFormaPagamento == 4) {
+			print(0, valorTotalCompra);
+		}
+	}
+
+	private void print(float valorDescontoCompra, float valorTotalPagar) {
+		System.out.printf("\n\n%s%.2f\n", "Desconto na compra: R$", valorDescontoCompra);
+		System.out.printf("%s%.2f\n", "Valor total a ser pago: R$", (valorTotalPagar - valorDescontoCompra));
+		System.out.printf("%s%.2f\n", "Valor tributário: R$", ((valorTotalPagar * VL_IMPOSTO) / 100));
 	}
 
 	private int formaDePagamento(Scanner sc, int[] quantProd, float[] precoProd) {
 		int index = -1;
 		do {
-			int imposto = 9;
 			float valorTotal = 0;
-			for (int i = 0; i < carrinhoNomeProduto.length; i++) {
-				valorTotal += (precoProd[i] * itemQuantProd[i]);
+			for (int i = 0; i < (indexCarrinho + 1); i++) {
+				valorTotal += (precoProd[i] * carrinhoQuantProd[i]);
 			}
-			float valorTotalComImposto = (((valorTotal * imposto) / 100)+valorTotal );
-			System.out.printf("%s%.2f\n", "O valor total da compra com imposto de " + imposto + "%: R$: ", valorTotalComImposto);
+			float valorTotalComImposto = (((valorTotal * VL_IMPOSTO) / 100) + valorTotal);
+			System.out.printf("%s%.2f\n", "O valor total da compra com imposto de " + VL_IMPOSTO + "%: R$: ", valorTotalComImposto);
 			System.out.println("Opções de pagamento:\n");
-			System.out.println("\t[1] À vista em dinheiro  ou cartão MASTERCARD, recebe 20% de desconto.");
-			System.out.println("\t[2] À vista no catão de crédito, recebe 15% de desconto.");
-			System.out.println("\t[3] Em duas vezes, preço normal de etiqueta sem juros.");
-			System.out.println("\t[4] Em trÊs vezes, preço normal de etiqueta mais jutos de 10%.");
+			System.out.println("\t[1] À vista em dinheiro, Pix ou cartão MASTERCARD, recebe 20% de desconto.");
+			System.out.println("\t[2] À vista no catão de crédito, recebe 10% de desconto.");
+			System.out.println("\t[3] Em duas vezes, sem desconto.");
+			System.out.println("\t[4] Em trÊs vezes, sem desconto");
 			System.out.println("\nQual a forma de  pagamento?");
 			index = sc.nextInt();
 		} while (index < 1 || index > 4);
@@ -71,7 +84,7 @@ public class WiproPdv {
 	public void realizarCompra(Scanner sc, String[] itemNomeProduto) {
 		int index;
 		int quantidadeDeProduto;
-		String continuar;
+		String continuar = "";
 		do {
 			imprimeItem(itemCodProduto, itemNomeProduto, itemQuantProd, itemPrecoProd);
 
@@ -79,6 +92,13 @@ public class WiproPdv {
 			index = (sc.nextInt()-1);
 			System.out.print("Insira a quantidade do produto:");
 			quantidadeDeProduto = sc.nextInt();
+
+			if (itemQuantProd[index] < quantidadeDeProduto) {
+				System.out.println("Produto Indisponível");
+				continuar = sc.next();
+				continue;
+			}
+
 			System.out.printf("\n%d un. de %s adicionado com sucesso no carrinho!!\n\n", quantidadeDeProduto, itemNomeProduto[index]);
 
 			indexCarrinho++;
