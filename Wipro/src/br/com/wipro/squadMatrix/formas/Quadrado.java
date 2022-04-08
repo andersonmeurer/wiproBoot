@@ -1,6 +1,7 @@
 package br.com.wipro.squadMatrix.formas;
 
 public class Quadrado implements IFormaGeometrica {
+
 	@Override
 	public String cor() {
 		return "Verde";
@@ -13,6 +14,6 @@ public class Quadrado implements IFormaGeometrica {
 
 	@Override
 	public double area(double a, double b) {
-		return 0;
+		return a * a;
 	}
 }

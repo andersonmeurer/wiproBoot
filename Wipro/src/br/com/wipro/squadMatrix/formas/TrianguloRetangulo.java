@@ -14,7 +14,6 @@ public class TrianguloRetangulo implements IFormaGeometrica {
 
 	@Override
 	public double area(double a, double b) {
-		return a + b;
+		return (a * b) / 2;
 	}
-
 }

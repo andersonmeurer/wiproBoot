@@ -14,6 +14,6 @@ public class Circulo implements IFormaGeometrica {
 
 	@Override
 	public double area(double a, double b) {
-		return 0;
+		return ((a * a) * Math.PI) / 2;
 	}
 }

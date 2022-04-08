@@ -13,6 +13,6 @@ public class Retangulo implements IFormaGeometrica {
 
 	@Override
 	public double area(double a, double b) {
-		return 0;
+		return a * b;
 	}
 }
